@@ -6,8 +6,10 @@ const User=require('./models/userSchema');
 const userRoutes = require('./routes/userRoutes.js')
 const candidateRoute = require('./routes/candidateRoute.js')
 const votingRoutes = require('./routes/voteRouts.js')
+require('dotenv').config();
 
 const port=process.env.PORT;
+app.use('/uploads', express.static('uploads'));
 
 
 const cors = require('cors')

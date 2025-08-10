@@ -50,6 +50,7 @@ router.post('/login', async(req, res)=>{
         const user = await User.findOne({aadharCardNumber : userData.aadharCardNumber})
 
         if(!user || !(await user.comparePassword(userData.password))){
+            console.log('Invali Password');
             return res.status(401).json({error: 'Invalid Aadhar Card Number or Password'});
         }
 

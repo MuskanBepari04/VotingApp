@@ -1,8 +1,22 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer')
+const path = require('path')
 const Candidate = require("../models/candidateSchema");
 const User = require("../models/userSchema");
 const { auth } = require("../Authentication/auth");
+
+const storage = multer.diskStorage({
+  destination:(req,file,cb)=>{
+    cb(null, 'uploads/')
+  },
+  filename:(req ,file , cb)=>{
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+
+});
+
+const upload = multer({ storage });
 
 const isAdmin = async (userId) => {
   try {
@@ -27,10 +41,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/add", auth, async (req, res) => {
+router.post("/add",upload.single('image'), auth, async (req, res) => {
   try {
     const data = req.body;
     const id = req.user.id;
+    if (req.file) {
+      data.image = req.file.filename;
+    }
     if (!(await isAdmin(id))) {
       return res
         .status(401)
@@ -58,7 +75,7 @@ router.put("/update/:CandidateId", auth, async (req, res) => {
 
     const response = await Candidate.findByIdAndUpdate(CandidateId, data);
     if (!response) {
-      return res.status(404).json({ error: "Candidate not found" });
+      return res.status(404).json({ message: "Candidate not found" });
     }
 
     console.log("candidate data updated");

@@ -21,11 +21,14 @@ router.get("/vote/:candidateId", auth, async (req, res) => {
     console.log('User Not Found')
     return res.status(404).json({ message: "User not found" });
   }
-  if(user.role ==='admin' || user.isVoted){
+  if(user.role ==='admin'){
     console.log('Already Voted ')
-     return res.status(404).json({ message: "Cant Vote" });
+     return res.status(404).json({ message: "Admin Cant Vote" });
   }
-
+  if(user.isVoted){
+    console.log('Already Voted ')
+     return res.status(404).json({ message: "You have already voted" });
+  }
   candidate.votes.push({user:userId})
   candidate.voteCount++
   await candidate.save()
@@ -47,8 +50,10 @@ router.get('/count' , async (req, res)=>{
 
     const voteRecord = candidates.map((data)=>{
         return{
+           name:data.name,
             party : data.party,
-            voteCount : data.voteCount
+            voteCount : data.voteCount,
+            image:data.image
         }
     })
 

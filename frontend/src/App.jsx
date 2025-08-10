@@ -12,24 +12,26 @@ import DeleteCandidate from './pages/adminDashboard/DeleteCandidate'
 import ChangePassword from './pages/User/ChangePassword'
 import Vote from './components/Vote'
 import VoteCount from './pages/voteCount'
+import VotingPanel from './pages/User/VotingPanel'
+import  { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
  <>
+ <Toaster/>
  <Routes>
     <Route path='/' element={<Home/>}></Route>
-  <Route path='/auth/signup' element={<Signup/>}></Route>
-  <Route path='/auth/login' element={<Login/>}></Route>
+    <Route path='/auth/signup' element={<Signup/>}></Route>
+    <Route path='/auth/login' element={<Login/>}></Route>
     <Route path='/profile' element={<UserProfile/>}></Route>
-      <Route path='/auth/profile/password' element={<ChangePassword/>}></Route>
+    <Route path='/auth/profile/password' element={<ChangePassword/>}></Route>
     <Route path='/admin' element={<AdminDashBoard/>}></Route>
     <Route path='/admin/add' element={<AddCandidate/>}></Route>
     <Route path='/admin/update/:CandidateID' element={<UpdateCandidate/>}></Route>
     <Route path='/admin/delete/:CandidateID' element={<DeleteCandidate/>}></Route>
     <Route path='/voting/vote/:CandidateID' element={<Vote/>}></Route>
     <Route path='/voting/count' element={<VoteCount/>}></Route>
-    
-
+    <Route path='/voting' element={<VotingPanel/>}></Route>
  </Routes>
  </>
   )

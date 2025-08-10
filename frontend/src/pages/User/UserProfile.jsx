@@ -1,66 +1,82 @@
-import axios from 'axios'
-import userContext from '../../context/userContext'
-import { useContext , useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import CandidateList from '../../components/CandidateList'
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Button from "../../components/Button";
+import toast from "react-hot-toast";
 
 const UserProfile = () => {
-    const [userInformation , setUserInformation]=useState({});
-     const [candidateList , setCandidateList] =useState([])
-      const apiUrl = import.meta.env.VITE_API_URL;
+  const [userInformation, setUserInformation] = useState({});
+
+  const apiUrl = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  useEffect(()=>{
-      axios.get(`${apiUrl}/auth/profile` , config)
-      .then((response)=>{
-        setUserInformation(response.data.user)
-      }).catch((err)=>{
-        console.log(err.message)
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/auth/profile`, config)
+      .then((response) => {
+        setUserInformation(response.data.user);
       })
-       axios.get(`${apiUrl}/candidate`)
-     .then((response)=>{
-      setCandidateList(response.data)
-     })
-     .catch((err)=>{
-      console.log(err)
-     })
-    } , [])
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        console.log(err.message);
+      });
+  }, []);
 
   return (
+    <div className="min-h-screen bg-green-50 py-10 px-4">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
+          Welcome {userInformation.name}
+        </h1>
 
-    <div>
-    <div>
-     <div>User Profile</div>
-     <div>
-        <p>{userInformation.name}</p>
-        <p>{userInformation.age}</p>
-        <p>{userInformation.aadharCardNumber}</p>
-        <p>{userInformation.address}</p>
-        <p>{userInformation.email}</p>
-        <p>{userInformation.mobile}</p>
-     </div>
-    </div>
-    <div className='mt-5'>
-        <Link to={'/auth/profile/password'} className='border p-2 mx-2' >Change Password</Link>
-        <Link to={'/'} className='border p-2 mx-2'>Vote</Link>
-        <Link to={'/'} className='border p-2 mx-2'>Vote Count</Link>
-    </div>
-    <div>
-    <CandidateList candidateList={candidateList}/>
-    </div>
-    {candidateList.map((value , index)=>(
-             <div className='mt-5'key={index}>
-            <Link to={`/voting/vote/${value._id}`} className='p-2 mx-3 border'>Vote {value.name}</Link>
+        <div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-6">
+          <img
+            src="../images/profile.jpg"
+            alt="Profile Illustration"
+            className="w-40 h-40 rounded-full border-4 border-green-500 shadow-md mb-4 sm:mb-0"
+          />
+
+          <div className="text-gray-800 space-y-2">
+            <p>
+              <span className="font-semibold text-green-800">Name:</span>{" "}
+              {userInformation.name}
+            </p>
+            <p>
+              <span className="font-semibold text-green-800">Email:</span>{" "}
+              {userInformation.email}
+            </p>
+            <p>
+              <span className="font-semibold text-green-800">Mobile:</span>{" "}
+              {userInformation.mobile}
+            </p>
+            <p>
+              <span className="font-semibold text-green-800">Age:</span>{" "}
+              {userInformation.age}
+            </p>
+            <p>
+              <span className="font-semibold text-green-800">
+                Aadhar Card No:
+              </span>{" "}
+              {userInformation.aadharCardNumber}
+            </p>
+            <p>
+              <span className="font-semibold text-green-800">Address:</span>{" "}
+              {userInformation.address}
+            </p>
           </div>
-           ))}
+        </div>
 
-           <div><Link to={'/voting/count'}>See Vote Count</Link></div>
+        <div className="mt-8 flex flex-wrap gap-4 justify-center sm:justify-start">
+          <Button to="/auth/profile/password" text="Change Password" />
+          <Button to="/voting" text="Start Voting" />
+          <Button to="/voting/count" text=" Vote Count" />
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserProfile
+export default UserProfile;

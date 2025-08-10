@@ -3,8 +3,6 @@ const jwt=require('jsonwebtoken')
 const SECRET_KEY =process.env.JWT_SECRET;
 
 
-
-
 const auth =async (req , res , next)=>{
     const authorization = req.headers.authorization
     if(!authorization) return res.status(500).json({message:"No Data in Headers"})
